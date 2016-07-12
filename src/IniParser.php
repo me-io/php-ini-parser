@@ -3,14 +3,14 @@
 /**
  * [MIT Licensed](http://www.opensource.org/licenses/mit-license.php)
  * Copyright (c) 2013 Austin Hyde
- * 
+ *
  * Implements a parser for INI files that supports
  * * Section inheritance
  * * Property nesting
  * * Simple arrays
- * 
+ *
  * Compatible with PHP 5.2.0+
- * 
+ *
  * @author Austin Hyde
  * @author Till Klampaeckel <till@php.net>
  */
@@ -24,13 +24,19 @@ class IniParser {
 
     /**
      * Enable/disable property nesting feature
-     * @var boolean 
+     * @var boolean
      */
     public $property_nesting = true;
 
     /**
+     * Enable/disable parametric value parsing
+     * @var boolean
+     */
+    public $parametric_parsing = false;
+
+    /**
      * Use ArrayObject to allow array work as object (true) or use native arrays (false)
-     * @var boolean 
+     * @var boolean
      */
     public $use_array_object = true;
 
@@ -58,7 +64,7 @@ class IniParser {
 
     /**
      * Array literals parse mode
-     * @var int 
+     * @var int
      */
     public $array_literals_behavior = self::PARSE_SIMPLE;
 
@@ -89,6 +95,7 @@ class IniParser {
 
         $simple_parsed = parse_ini_file($this->file, true);
         $inheritance_parsed = $this->parseSections($simple_parsed);
+
         return $this->parseKeys($inheritance_parsed);
     }
 
@@ -216,16 +223,42 @@ class IniParser {
                             throw new LogicException("Cannot append array to inherited value '{$k}'");
                         }
                         $value = array_merge($current, $value);
+                        $value = array_map([$this, 'parseParametricValue'], $value);
                     } else {
                         $value = $current . $value;
                     }
                 }
 
-                $current = $value;
+                $current = $this->parseParametricValue($value);
             }
         }
 
         return $output;
+    }
+
+    /**
+     * Parses the parametric value to multiple parameters
+     * @param $value
+     *
+     * @return array
+     */
+    protected function parseParametricValue($value) {
+
+        // If parametric parsing isn't turned on or value has no parameters
+        if (!$this->parametric_parsing || !is_string($value) || strpos($value, '=') === false) {
+            return $value;
+        }
+
+        // As there could be multiple parameters. Each separated by single space
+        $parameters = explode(' ', $value);
+
+        $parsedValue =[];
+        foreach ($parameters as $parameter) {
+            list($parameterKey, $parameterValue) = explode('=', $parameter);
+            $parsedValue[$parameterKey] = $parameterValue;
+        }
+
+        return $parsedValue;
     }
 
     /**
