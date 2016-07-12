@@ -69,6 +69,13 @@ class IniParser {
     const PARSE_JSON = 2;
 
     /**
+     * Normal: 0
+     * Raw: 1
+     * Typed: 2
+     */
+    const INI_PARSE_OPTION = 0;
+
+    /**
      * Array literals parse mode
      * @var int
      */
@@ -99,7 +106,7 @@ class IniParser {
             throw new LogicException("Need a file to parse.");
         }
 
-        $simple_parsed = parse_ini_file($this->file, true);
+        $simple_parsed = parse_ini_file($this->file, true, static::INI_PARSE_OPTION);
         $inheritance_parsed = $this->parseSections($simple_parsed);
 
         return $this->parseKeys($inheritance_parsed);
@@ -113,7 +120,7 @@ class IniParser {
      * @return array
      */
     public function process($src) {
-        $simple_parsed = parse_ini_string($src, true);
+        $simple_parsed = parse_ini_string($src, true, static::INI_PARSE_OPTION);
         $inheritance_parsed = $this->parseSections($simple_parsed);
         return $this->parseKeys($inheritance_parsed);
     }
