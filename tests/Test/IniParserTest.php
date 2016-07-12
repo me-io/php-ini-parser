@@ -212,6 +212,37 @@ class IniParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests the parametric values i.e. parameter has more parameters against it
+     *
+     * @return void
+     */
+    public function testParametricValues()
+    {
+        $configObj = $this->getConfig('fixture12.ini', [
+            'parametric_parsing' => true
+        ]);
+        $config    = $this->phpUnitDoesntUnderstandArrayObject($configObj);
+
+        $expected = array(
+            'guest' => [
+                'user_auth_login' => [
+                    'allowed' => 1,
+                    'app' => [
+                        'FLIGHT_API',
+                        'HOTEL_API'
+                    ],
+                    'verb' => '*'
+                ],
+                'user_account_register' => [
+                    'allowed' => 1
+                ]
+            ]
+        );
+
+        $this->assertEquals($expected, $config);
+    }
+
+    /**
      * Tests that appending to a potentially non-existent array works as expected
      * Spawned by https://github.com/austinhyde/IniParser/issues/6
      * and https://github.com/austinhyde/IniParser/pull/7
