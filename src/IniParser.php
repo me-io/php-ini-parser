@@ -255,7 +255,7 @@ class IniParser {
         $parsedValue =[];
         foreach ($parameters as $parameter) {
             list($parameterKey, $parameterValue) = explode('=', $parameter);
-            $parsedValue[$parameterKey] = $parameterValue;
+            $parsedValue[$parameterKey] = strpos($parameterValue, '|') !== false ? explode('|', $parameterValue) : $parameterValue;
         }
 
         return $parsedValue;
