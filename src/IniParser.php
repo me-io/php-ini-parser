@@ -223,7 +223,7 @@ class IniParser {
                             throw new LogicException("Cannot append array to inherited value '{$k}'");
                         }
                         $value = array_merge($current, $value);
-                        $value = array_map([$this, 'parseParametricValue'], $value);
+                        $value = array_map(array($this, 'parseParametricValue'), $value);
                     } else {
                         $value = $current . $value;
                     }
@@ -249,10 +249,10 @@ class IniParser {
             return $value;
         }
 
-        // As there could be multiple parameters. Each separated by single space
+        // As there could be multiple parameters separated by spaces
         $parameters = preg_split('/\s+/', $value);
 
-        $parsedValue =[];
+        $parsedValue =array();
         foreach ($parameters as $parameter) {
             list($parameterKey, $parameterValue) = explode('=', $parameter);
             $parsedValue[$parameterKey] = strpos($parameterValue, '|') !== false ? explode('|', $parameterValue) : $parameterValue;
