@@ -35,6 +35,12 @@ class IniParser {
     public $parametric_parsing = false;
 
     /**
+     * Separator in case of multiple values
+     * @var string
+     */
+    public $multiValueSeparator = '|';
+
+    /**
      * Use ArrayObject to allow array work as object (true) or use native arrays (false)
      * @var boolean
      */
@@ -255,7 +261,7 @@ class IniParser {
         $parsedValue =array();
         foreach ($parameters as $parameter) {
             list($parameterKey, $parameterValue) = explode('=', $parameter);
-            $parsedValue[$parameterKey] = strpos($parameterValue, '|') !== false ? explode('|', $parameterValue) : $parameterValue;
+            $parsedValue[$parameterKey] = strpos($parameterValue, $this->multiValueSeparator) !== false ? explode($this->multiValueSeparator, $parameterValue) : $parameterValue;
         }
 
         return $parsedValue;
