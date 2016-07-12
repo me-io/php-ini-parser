@@ -250,7 +250,7 @@ class IniParser {
         }
 
         // As there could be multiple parameters. Each separated by single space
-        $parameters = explode(' ', $value);
+        $parameters = preg_split('/\s+/', $value);
 
         $parsedValue =[];
         foreach ($parameters as $parameter) {
