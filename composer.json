@@ -1,23 +1,25 @@
 {
-    "name": "tajawal/php-ini-parser",
-    "description": "A Zend_Config_Ini like parser for .ini files.",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Austin Hyde",
-            "email": "austin109@gmail.com"
-        },
-        {
-            "name": "Till Klampaeckel",
-            "email": "till@php.net"
-        }
-    ],
-    "autoload": {
-        "psr-0": {
-            "IniParser":"src/"
-        }
+  "name": "tajawal/php-ini-parser",
+  "description": "A Zend_Config_Ini like parser for .ini files.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Austin Hyde",
+      "email": "austin109@gmail.com"
     },
-    "minimum-stability": "dev",
-    "keywords": ["configuration"]
+    {
+      "name": "Till Klampaeckel",
+      "email": "till@php.net"
+    }
+  ],
+  "autoload": {
+    "psr-0": {
+      "IniParser": "src/"
+    }
+  },
+  "minimum-stability": "dev",
+  "keywords": [
+    "configuration"
+  ]
 }

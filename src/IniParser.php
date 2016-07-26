@@ -22,7 +22,7 @@ class IniParser
      *
      * @var string
      */
-    protected $file;
+    protected $ini_content;
 
     /**
      * Enable/disable property nesting feature
@@ -67,6 +67,13 @@ class IniParser
     public $include_original_sections = false;
 
     /**
+     * If set to true, it will consider the passed parameter as string
+     *
+     * @var bool
+     */
+    public $treat_ini_string = false;
+
+    /**
      * Disable array literal parsing
      */
     const NO_PARSE = 0;
@@ -97,34 +104,39 @@ class IniParser
     public $array_literals_behavior = self::PARSE_SIMPLE;
 
     /**
-     * @param string $file
+     * @param string $iniContent File path or the ini string
      *
      * @return IniParser
      */
-    public function __construct($file = null)
+    public function __construct($iniContent = null)
     {
-        if ($file !== null) {
-            $this->setFile($file);
+        if ($iniContent !== null) {
+            $this->setIniContent($iniContent);
         }
     }
 
     /**
      * Parses an INI file
      *
-     * @param string $file
+     * @param string $iniContent
      *
      * @return array
      */
-    public function parse($file = null)
+    public function parse($iniContent = null)
     {
-        if ($file !== null) {
-            $this->setFile($file);
-        }
-        if (empty($this->file)) {
-            throw new LogicException("Need a file to parse.");
+        if ($iniContent !== null) {
+            $this->setIniContent($iniContent);
         }
 
-        $simple_parsed = parse_ini_file($this->file, true, $this->ini_parse_option);
+        if (empty($this->ini_content)) {
+            throw new LogicException("Need ini content to parse.");
+        }
+
+        if ($this->treat_ini_string) {
+            $simple_parsed = parse_ini_string($this->ini_content, true, $this->ini_parse_option);
+        } else {
+            $simple_parsed = parse_ini_file($this->ini_content, true, $this->ini_parse_option);
+        }
 
         $inheritance_parsed = $this->parseSections($simple_parsed);
 
@@ -147,17 +159,24 @@ class IniParser
     }
 
     /**
-     * @param string $file
+     * @param string $ini_content
      *
      * @return IniParser
      * @throws InvalidArgumentException
      */
-    public function setFile($file)
+    public function setIniContent($ini_content)
     {
-        if (!file_exists($file) || !is_readable($file)) {
-            throw new InvalidArgumentException("The file '{$file}' cannot be opened.");
+        // If the parsed parameter is to be treated as string instead of file
+        if ($this->treat_ini_string) {
+            $this->ini_content = $ini_content;
+        } else {
+
+            if (!file_exists($ini_content) || !is_readable($ini_content)) {
+                throw new InvalidArgumentException("The file '{$ini_content}' cannot be opened.");
+            }
+
+            $this->ini_content = $ini_content;
         }
-        $this->file = $file;
 
         return $this;
     }
@@ -197,7 +216,7 @@ class IniParser
                 } elseif (array_key_exists($s, $sections)) {
                     $arr = array_merge($sections[$s], $arr);
                 } else {
-                    throw new UnexpectedValueException("IniParser: In file '{$this->file}', section '{$root}': Cannot inherit from unknown section '{$s}'");
+                    throw new UnexpectedValueException("IniParser: In file '{$this->ini_content}', section '{$root}': Cannot inherit from unknown section '{$s}'");
                 }
             }
 
