@@ -5,12 +5,8 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Austin Hyde",
-      "email": "austin109@gmail.com"
-    },
-    {
-      "name": "Till Klampaeckel",
-      "email": "till@php.net"
+      "name": "IT Team",
+      "email": "it@tajawal.com"
     }
   ],
   "autoload": {
@@ -20,6 +16,7 @@
   },
   "minimum-stability": "dev",
   "keywords": [
-    "configuration"
+    "configuration",
+    "ini"
   ]
 }
