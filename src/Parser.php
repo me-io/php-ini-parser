@@ -1,20 +1,8 @@
 <?php
 
-/**
- * [MIT Licensed](http://www.opensource.org/licenses/mit-license.php)
- * Copyright (c) 2013 Austin Hyde
- *
- * Implements a parser for INI files that supports
- * * Section inheritance
- * * Property nesting
- * * Simple arrays
- *
- * Compatible with PHP 5.2.0+
- *
- * @author Austin Hyde
- * @author Till Klampaeckel <till@php.net>
- */
-class IniParser
+namespace Ini;
+
+class Parser
 {
 
     /**
@@ -105,8 +93,6 @@ class IniParser
 
     /**
      * @param string $iniContent File path or the ini string
-     *
-     * @return IniParser
      */
     public function __construct($iniContent = null)
     {
@@ -129,7 +115,7 @@ class IniParser
         }
 
         if (empty($this->ini_content)) {
-            throw new LogicException("Need ini content to parse.");
+            throw new \LogicException("Need ini content to parse.");
         }
 
         if ($this->treat_ini_string) {
@@ -152,7 +138,7 @@ class IniParser
      */
     public function process($src)
     {
-        $simple_parsed      = parse_ini_string($src, true, $this->ini_parse_option);
+        $simple_parsed = parse_ini_string($src, true, $this->ini_parse_option);
         $inheritance_parsed = $this->parseSections($simple_parsed);
 
         return $this->parseKeys($inheritance_parsed);
@@ -161,8 +147,8 @@ class IniParser
     /**
      * @param string $ini_content
      *
-     * @return IniParser
-     * @throws InvalidArgumentException
+     * @return \Ini\Parser
+     * @throws \InvalidArgumentException
      */
     public function setIniContent($ini_content)
     {
@@ -170,9 +156,8 @@ class IniParser
         if ($this->treat_ini_string) {
             $this->ini_content = $ini_content;
         } else {
-
             if (!file_exists($ini_content) || !is_readable($ini_content)) {
-                throw new InvalidArgumentException("The file '{$ini_content}' cannot be opened.");
+                throw new \InvalidArgumentException("The file '{$ini_content}' cannot be opened.");
             }
 
             $this->ini_content = $ini_content;
@@ -192,7 +177,7 @@ class IniParser
     {
         // do an initial pass to gather section names
         $sections = [];
-        $globals  = [];
+        $globals = [];
         foreach ($simple_parsed as $k => $v) {
             if (is_array($v)) {
                 // $k is a section name
@@ -206,8 +191,8 @@ class IniParser
         $output_sections = [];
         foreach ($sections as $k => $v) {
             $sects = array_map('trim', array_reverse(explode(':', $k)));
-            $root  = array_pop($sects);
-            $arr   = $v;
+            $root = array_pop($sects);
+            $arr = $v;
             foreach ($sects as $s) {
                 if ($s === '^') {
                     $arr = array_merge($globals, $arr);
@@ -216,7 +201,7 @@ class IniParser
                 } elseif (array_key_exists($s, $sections)) {
                     $arr = array_merge($sections[$s], $arr);
                 } else {
-                    throw new UnexpectedValueException("IniParser: In file '{$this->ini_content}', section '{$root}': Cannot inherit from unknown section '{$s}'");
+                    throw new \UnexpectedValueException("IniParser: In file '{$this->ini_content}', section '{$root}': Cannot inherit from unknown section '{$s}'");
                 }
             }
 
@@ -237,7 +222,7 @@ class IniParser
      */
     private function parseKeys(array $arr)
     {
-        $output       = $this->getArrayValue();
+        $output = $this->getArrayValue();
         $append_regex = '/\s*\+\s*$/';
         foreach ($arr as $k => $v) {
             if (is_array($v) && false === strpos($k, '.')) {
@@ -247,7 +232,7 @@ class IniParser
                 // if the key ends in a +, it means we should append to the previous value, if applicable
                 $append = false;
                 if (preg_match($append_regex, $k)) {
-                    $k      = preg_replace($append_regex, '', $k);
+                    $k = preg_replace($append_regex, '', $k);
                     $append = true;
                 }
 
@@ -279,7 +264,7 @@ class IniParser
                 if ($append && $current !== null) {
                     if (is_array($value)) {
                         if (!is_array($current)) {
-                            throw new LogicException("Cannot append array to inherited value '{$k}'");
+                            throw new \LogicException("Cannot append array to inherited value '{$k}'");
                         }
                         $value = array_merge($current, $value);
                         $value = array_map([$this, 'parseParametricValue'], $value);
@@ -299,8 +284,8 @@ class IniParser
      * Parses the parametric value to multiple parameters
      *
      * @param $value
-     *
-     * @return array
+     * // todo is array or string?
+     * @return array|string
      */
     protected function parseParametricValue($value)
     {
@@ -316,6 +301,7 @@ class IniParser
         $parsedValue = [];
         foreach ($parameters as $parameter) {
             list($parameterKey, $parameterValue) = explode('=', $parameter);
+            // todo simplify
             $parsedValue[$parameterKey] = strpos($parameterValue, $this->multi_value_separator) !== false ? explode($this->multi_value_separator, $parameterValue) : $parameterValue;
         }
 
@@ -360,10 +346,9 @@ class IniParser
     protected function getArrayValue($array = [])
     {
         if ($this->use_array_object) {
-            return new ArrayObject($array, ArrayObject::ARRAY_AS_PROPS);
+            return new \ArrayObject($array, \ArrayObject::ARRAY_AS_PROPS);
         } else {
             return $array;
         }
     }
-
 }

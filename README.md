@@ -9,7 +9,7 @@ Set your `composer.json` file to have :
 ```json
 {
 	"require": {
-		"tajawal/php-ini-parser": "dev-master"
+		"me-io/ini-parser-php": "^1"
 	}
 }
 ```
