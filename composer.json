@@ -1,5 +1,5 @@
 {
-  "name": "me-io/ini-parser-php",
+  "name": "me-io/php-ini-parser",
   "description": "A Zend_Config_Ini like parser for .ini files.",
   "type": "library",
   "license": "MIT",
