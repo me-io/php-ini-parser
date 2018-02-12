@@ -1,6 +1,23 @@
-# IniParser
+<h1 align="center">
+  PHP .ini parser
+</h1>
 
-IniParser is a simple parser for complex INI files, providing a number of extra syntactic features to the built-in INI parsing functions, including section inheritance, property nesting, and array literals.
+<hr />
+
+[![Build Status][build-badge]][build]
+[![downloads][downloads-badge]][downloads]
+[![MIT License][license-badge]][license]
+
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
+[![PRs Welcome][prs-badge]][prs]
+[![Code of Conduct][coc-badge]][coc]
+[![Watch on GitHub][github-watch-badge]][github-watch]
+[![Star on GitHub][github-star-badge]][github-star]
+[![Tweet][twitter-badge]][twitter]
+
+# \Ini\Parser
+
+\Ini\Parser is a simple parser for complex INI files, providing a number of extra syntactic features to the built-in INI parsing functions, including section inheritance, property nesting, and array literals.
 
 ## Installing by [Composer](https://getcomposer.org)
 
@@ -64,9 +81,9 @@ This is great when you just want a simple configuration file, but here is a supe
     database.name = production
     database.username = root
 
-And when parsed with IniParser:
+And when parsed with \Ini\Parser:
 
-    $parser = new \IniParser('sample.ini');
+    $parser = new \Ini\Parser('sample.ini');
     $config = $parser->parse();
 
 You get the following structure:
@@ -163,7 +180,7 @@ array(
 
 ### Property Nesting
 
-IniParser allows you to treat properties as associative arrays:
+\Ini\Parser allows you to treat properties as associative arrays:
 
     person.age = 42
     person.name.first = John
@@ -185,7 +202,7 @@ array (
 
 ### Section Inheritance
 
-Keeping to the DRY principle, IniParser allows you to "inherit" from other sections (similar to OOP inheritance), meaning you don't have to continually re-define the same properties over and over again. As you can see in the example above, "production" inherits from "staging", which in turn inherits from "testing".
+Keeping to the DRY principle, \Ini\Parser allows you to "inherit" from other sections (similar to OOP inheritance), meaning you don't have to continually re-define the same properties over and over again. As you can see in the example above, "production" inherits from "staging", which in turn inherits from "testing".
 
 You can even inherit from multiple parents, as in `[child : p1 : p2 : p3]`. The properties of each parent are merged into the child from left to right, so that the properties in `p1` are overridden by those in `p2`, then by `p3`, then by those in `child` on top of that.
 
@@ -235,9 +252,30 @@ array (
 
 ### ArrayObject
 
-As an added bonus, IniParser also allows you to access the values OO-style:
+As an added bonus, \Ini\Parser also allows you to access the values OO-style:
 
 ```php
 echo $config->production->database->connection; // output: mysql:host=127.0.0.1
 echo $config->staging->debug; // output: 1
 ```
+
+## License
+
+The code is available under the [MIT license](LICENSE.md).
+
+[build-badge]: https://img.shields.io/travis/me-io/php-ini-parser.svg?style=flat-square
+[build]: https://travis-ci.org/me-io/php-ini-parser
+[downloads-badge]: https://img.shields.io/packagist/dm/me-io/php-ini-parser.svg?style=flat-square
+[downloads]: https://packagist.org/packages/me-io/php-ini-parser/stats
+[license-badge]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+[license]: https://github.com/me-io/php-ini-parser/blob/master/LICENSE.md
+[prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
+[prs]: http://makeapullrequest.com
+[coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
+[coc]: https://github.com/me-io/php-ini-parser/blob/master/CODE_OF_CONDUCT.md
+[github-watch-badge]: https://img.shields.io/github/watchers/me-io/php-ini-parser.svg?style=social
+[github-watch]: https://github.com/me-io/php-ini-parser/watchers
+[github-star-badge]: https://img.shields.io/github/stars/me-io/php-ini-parser.svg?style=social
+[github-star]: https://github.com/me-io/php-ini-parser/stargazers
+[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20php-ini-parser!%20https://github.com/me-io/php-ini-parser%20%F0%9F%91%8D
+[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/me-io/php-ini-parser.svg?style=social
