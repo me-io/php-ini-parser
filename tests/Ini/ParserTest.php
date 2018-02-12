@@ -5,9 +5,6 @@ namespace Tests\Ini;
 use Ini\Parser;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @author Till Klampaeckel <till@php.net>
- */
 class ParserTest extends TestCase
 {
     /**
@@ -138,7 +135,7 @@ class ParserTest extends TestCase
     /**
      * Test that inheriting from an undefined section gives a nice error
      *
-     * @expectedException UnexpectedValueException
+     * @expectedException \UnexpectedValueException
      */
     public function testInvalidSectionReference()
     {
