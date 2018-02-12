@@ -5,6 +5,8 @@
 <hr />
 
 [![Build Status][build-badge]][build]
+[![Code Cov][codecov-badge]][codecov]
+[![Scrutinizer][scrutinizer-badge]][scrutinizer]
 [![downloads][downloads-badge]][downloads]
 [![MIT License][license-badge]][license]
 
@@ -279,3 +281,7 @@ The code is available under the [MIT license](LICENSE.md).
 [github-star]: https://github.com/me-io/php-ini-parser/stargazers
 [twitter]: https://twitter.com/intent/tweet?text=Check%20out%20php-ini-parser!%20https://github.com/me-io/php-ini-parser%20%F0%9F%91%8D
 [twitter-badge]: https://img.shields.io/twitter/url/https/github.com/me-io/php-ini-parser.svg?style=social
+[codecov-badge]: https://codecov.io/gh/me-io/php-ini-parser/branch/master/graph/badge.svg
+[codecov]: https://codecov.io/gh/me-io/php-ini-parser
+[scrutinizer-badge]: https://scrutinizer-ci.com/g/me-io/php-ini-parser/badges/quality-score.png?b=master
+[scrutinizer]: https://scrutinizer-ci.com/g/me-io/php-ini-parser/?branch=master
