@@ -15,9 +15,9 @@
 [![Star on GitHub][github-star-badge]][github-star]
 [![Tweet][twitter-badge]][twitter]
 
-# \Ini\Parser
+# Ini Parser
 
-\Ini\Parser is a simple parser for complex INI files, providing a number of extra syntactic features to the built-in INI parsing functions, including section inheritance, property nesting, and array literals.
+Ini Parser is a simple parser for complex INI files, providing a number of extra syntactic features to the built-in INI parsing functions, including section inheritance, property nesting, and array literals.
 
 ## Installing by [Composer](https://getcomposer.org)
 
@@ -26,7 +26,7 @@ Set your `composer.json` file to have :
 ```json
 {
 	"require": {
-		"me-io/ini-parser-php": "^1"
+		"me-io/php-ini-parser": "^1"
 	}
 }
 ```
@@ -180,7 +180,7 @@ array(
 
 ### Property Nesting
 
-\Ini\Parser allows you to treat properties as associative arrays:
+Ini Parser allows you to treat properties as associative arrays:
 
     person.age = 42
     person.name.first = John
@@ -202,7 +202,7 @@ array (
 
 ### Section Inheritance
 
-Keeping to the DRY principle, \Ini\Parser allows you to "inherit" from other sections (similar to OOP inheritance), meaning you don't have to continually re-define the same properties over and over again. As you can see in the example above, "production" inherits from "staging", which in turn inherits from "testing".
+Keeping to the DRY principle, Ini Parser allows you to "inherit" from other sections (similar to OOP inheritance), meaning you don't have to continually re-define the same properties over and over again. As you can see in the example above, "production" inherits from "staging", which in turn inherits from "testing".
 
 You can even inherit from multiple parents, as in `[child : p1 : p2 : p3]`. The properties of each parent are merged into the child from left to right, so that the properties in `p1` are overridden by those in `p2`, then by `p3`, then by those in `child` on top of that.
 
@@ -252,7 +252,7 @@ array (
 
 ### ArrayObject
 
-As an added bonus, \Ini\Parser also allows you to access the values OO-style:
+As an added bonus, Ini Parser also allows you to access the values OO-style:
 
 ```php
 echo $config->production->database->connection; // output: mysql:host=127.0.0.1
