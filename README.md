@@ -1,6 +1,9 @@
 <h1 align="center">
   PHP .ini parser
 </h1>
+<p align="center">
+    Ini Parser is a simple parser for complex INI files, providing a number of extra syntactic features to the built-in INI parsing functions, including section inheritance, property nesting, and array literals.
+</p>
 
 <hr />
 
@@ -17,25 +20,21 @@
 [![Star on GitHub][github-star-badge]][github-star]
 [![Tweet][twitter-badge]][twitter]
 
-# Ini Parser
+## Installing
 
-Ini Parser is a simple parser for complex INI files, providing a number of extra syntactic features to the built-in INI parsing functions, including section inheritance, property nesting, and array literals.
-
-## Installing by [Composer](https://getcomposer.org)
-
-Set your `composer.json` file to have :
+Add `me-io/php-ini-parser` following inside your `composer.json` file like this:
 
 ```json
 {
-	"require": {
-		"me-io/php-ini-parser": "^1"
-	}
+    "require": {
+        "me-io/php-ini-parser": "^1"
+    }
 }
 ```
 
-Then install the dependencies :
+Then inside your terminal run the following command to install the dependencies:
 
-```shell
+```bash
 composer install
 ```
 
@@ -43,87 +42,93 @@ composer install
 
 Standard INI files look like this:
 
-    key = value
-    another_key = another value
-    
-    [section_name]
-    a_sub_key = yet another value
+```ini
+key = value
+another_key = another value
 
-And when parsed with PHP's built-in `parse_ini_string()` or `parse_ini_file()`, looks like
+[section_name]
+a_sub_key = yet another value
+```
+
+And when parsed with PHP's built-in `parse_ini_string()` or `parse_ini_file()`, looks like:
 
 ```php
-array(
+[
     'key' => 'value',
     'another_key' => 'another value',
-    'section_name' => array(
+    'section_name' => [
         'a_sub_key' => 'yet another value'
-    )
-)
+    ]
+]
 ```
 
 This is great when you just want a simple configuration file, but here is a super-charged INI file that you might find in the wild:
 
-    environment = testing
-    
-    [testing]
-    debug = true
-    database.connection = "mysql:host=127.0.0.1"
-    database.name = test
-    database.username = 
-    database.password =
-    secrets = [1,2,3]
-    
-    [staging : testing]
-    database.name = stage
-    database.username = staging
-    database.password = 12345
-    
-    [production : staging]
-    debug = false;
-    database.name = production
-    database.username = root
+```ini
+environment = testing
+
+[testing]
+debug = true
+database.connection = "mysql:host=127.0.0.1"
+database.name = test
+database.username = 
+database.password =
+secrets = [1,2,3]
+
+[staging : testing]
+database.name = stage
+database.username = staging
+database.password = 12345
+
+[production : staging]
+debug = false;
+database.name = production
+database.username = root
+```
 
 And when parsed with \Ini\Parser:
 
-    $parser = new \Ini\Parser('sample.ini');
-    $config = $parser->parse();
+```ini
+$parser = new \Ini\Parser('sample.ini');
+$config = $parser->parse();
+```
 
 You get the following structure:
 
 ```php
-array(
+[
     'environment' => 'testing',
-    'testing' => array(
+    'testing' => [
         'debug' => '1',
-        'database' => array(
+        'database' => [
             'connection' => 'mysql:host=127.0.0.1',
             'name' => 'test',
             'username' => '',
             'password' => ''
-        ),
-        'secrets' => array('1','2','3')
-    ),
-    'staging' => array(
+        ],
+        'secrets' => ['1','2','3']
+    ],
+    'staging' => [
         'debug' => '1',
-        'database' => array(
+        'database' => [
             'connection' => 'mysql:host=127.0.0.1',
             'name' => 'stage',
             'username' => 'staging',
             'password' => '12345'
-        ),
-       'secrets' => array('1','2','3')
-    ),
-    'production' => array(
+        ],
+       'secrets' => ['1','2','3']
+    ],
+    'production' => [
         'debug' => '',
-        'database' => array(
+        'database' => [
             'connection' => 'mysql:host=127.0.0.1',
             'name' => 'production',
             'username' => 'root',
             'password' => '12345'
-        ),
-        'secrets' => array('1','2','3')
-    )
-)
+        ],
+        'secrets' => ['1','2','3']
+    ]
+]
 ```
 
 ## Supported Features
@@ -132,7 +137,9 @@ array(
 
 You can directly create arrays using the syntax `[a, b, c]` on the right hand side of an assignment. For example:
 
-    colors = [blue, green, red]
+```ini
+colors = [blue, green, red]
+```
 
 **NOTE:** At the moment, quoted strings inside array literals have undefined behavior.
 
@@ -140,66 +147,70 @@ You can directly create arrays using the syntax `[a, b, c]` on the right hand si
 
 Besides arrays, you can create dictionaries and more complex structures using JSON syntax. For example, you can use:
 
-     people = '{
-        "boss": {
-           "name": "John", 
-           "age": 42 
+```json
+people = '{
+    "boss": {
+        "name": "John", 
+        "age": 42 
+    }, 
+    "staff": [
+        {
+            "name": "Mark",
+            "age": 35 
         }, 
-        "staff": [
-           {
-              "name": "Mark",
-              "age": 35 
-           }, 
-           {
-              "name": "Bill", 
-              "age": 44 
-           }
-        ] 
-     }'
+        {
+            "name": "Bill", 
+            "age": 44 
+        }
+    ] 
+}'
+```
 
 This turns into an array like:
 
 ```php
-array(
-    'boss' => array(
+[
+    'boss' => [
         'name' => 'John',
         'age' => 42
-    ),
-    'staff' => array(
-        array (
+    ],
+    'staff' => [
+        [
             'name' => 'Mark',
             'age' => 35,
-        ),
-        array (
+        ],
+        [
             'name' => 'Bill',
             'age' => 44,
-        ),
-    ),
-)
+        ],
+    ],
+]
 ```
 
-**NOTE:**  Remember to wrap the JSON strings in single quotes for a correct analysis. The JSON names must be enclosed in double quotes and trailing commas are not allowed.
+> **NOTE:**  Remember to wrap the JSON strings in single quotes for a correct analysis. The JSON names must be enclosed in double quotes and trailing commas are not allowed.
 
 ### Property Nesting
 
 Ini Parser allows you to treat properties as associative arrays:
 
-    person.age = 42
-    person.name.first = John
-    person.name.last = Doe
+```ini
+person.age = 42
+person.name.first = John
+person.name.last = Doe
+```
 
 This turns into an array like:
 
 ```php
-array (
-    'person' => array (
+[
+    'person' => [
         'age' => 42,
-        'name' => array (
+        'name' => [
             'first' => 'John',
             'last' => 'Doe'
-        )
-    )
-)
+        ]
+    ]
+]
 ```
 
 ### Section Inheritance
@@ -210,46 +221,50 @@ You can even inherit from multiple parents, as in `[child : p1 : p2 : p3]`. The 
 
 During the inheritance process, if a key ends in a `+`, the merge behavior changes from overwriting the parent value to prepending the parent value (or appending the child value - same thing). So the example file
 
-    [parent]
-    arr = [a,b,c]
-    val = foo
+```ini
+[parent]
+arr = [a,b,c]
+val = foo
 
-    [child : parent]
-    arr += [x,y,z]
-    val += bar
+[child : parent]
+arr += [x,y,z]
+val += bar
+```
 
 would be parsed into the following:
 
 ```php
-array(
-    'parent' => array(
-        'arr' => array('a','b','c'),
+[
+    'parent' => [
+        'arr' => ['a','b','c'],
         'val' => 'foo'
-    ),
-    'child' => array(
-        'arr' => array('a','b','c','x','y','z'),
+    ],
+    'child' => [
+        'arr' => ['a','b','c','x','y','z'],
         'val' => 'foobar'
-    )
-)
+    ]
+]
 ```
 
-*If you can think of a more useful operation than concatenation for non-array types, please open an issue*
+> *If you can think of a more useful operation than concatenation for non-array types, please open an issue*
 
 Finally, it is possible to inherit from the special `^` section, representing the top-level or global properties:
 
-    foo = bar
+```init
+foo = bar
 
-    [sect : ^]
+[sect : ^]
+```
 
 Parses to:
 
 ```php
-array (
+[
     'foo' => 'bar',
-    'sect' => array (
+    'sect' => [
         'foo' => 'bar'
-    )
-)
+    ]
+]
 ```
 
 ### ArrayObject
