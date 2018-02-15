@@ -1,0 +1,28 @@
+{
+  "name": "php-ini-parser",
+  "version": "1.0.0",
+  "description": "A Zend_Config_Ini like parser for .ini files.",
+  "keywords": [
+    "configuration",
+    "ini"
+  ],
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "contributors:add": "./node_modules/.bin/all-contributors add",
+    "contributors:generate": "./node_modules/.bin/all-contributors generate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/me-io/php-ini-parser.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/me-io/php-ini-parser/issues"
+  },
+  "homepage": "https://github.com/me-io/php-ini-parser#readme",
+  "devDependencies": {
+    "all-contributors-cli": "^4.10.1"
+  }
+}
