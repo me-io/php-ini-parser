@@ -116,7 +116,7 @@ class Parser
      *
      * @param string $iniContent
      *
-     * @return array|self
+     * @return mixed
      */
     public function parse(string $iniContent = null)
     {
@@ -228,7 +228,7 @@ class Parser
     /**
      * @param array $arr
      *
-     * @return array|self
+     * @return mixed
      */
     private function parseKeys(array $arr)
     {
