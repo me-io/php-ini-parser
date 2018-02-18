@@ -2,9 +2,17 @@
 
 namespace Ini;
 
+use ArrayObject;
+use LogicException;
+use InvalidArgumentException;
+
+/**
+ * Class Parser
+ *
+ * @package Ini
+ */
 class Parser
 {
-
     /**
      * Filename of our .ini file.
      *
@@ -92,9 +100,11 @@ class Parser
     public $array_literals_behavior = self::PARSE_SIMPLE;
 
     /**
+     * Parser constructor.
+     *
      * @param string $iniContent File path or the ini string
      */
-    public function __construct($iniContent = null)
+    public function __construct(string $iniContent = null)
     {
         if ($iniContent !== null) {
             $this->setIniContent($iniContent);
@@ -106,16 +116,16 @@ class Parser
      *
      * @param string $iniContent
      *
-     * @return array
+     * @return mixed
      */
-    public function parse($iniContent = null)
+    public function parse(string $iniContent = null)
     {
         if ($iniContent !== null) {
             $this->setIniContent($iniContent);
         }
 
         if (empty($this->ini_content)) {
-            throw new \LogicException("Need ini content to parse.");
+            throw new LogicException("Need ini content to parse.");
         }
 
         if ($this->treat_ini_string) {
@@ -136,7 +146,7 @@ class Parser
      *
      * @return array
      */
-    public function process($src)
+    public function process(string $src)
     {
         $simple_parsed = parse_ini_string($src, true, $this->ini_parse_option);
         $inheritance_parsed = $this->parseSections($simple_parsed);
@@ -150,14 +160,14 @@ class Parser
      * @return \Ini\Parser
      * @throws \InvalidArgumentException
      */
-    public function setIniContent($ini_content)
+    public function setIniContent(string $ini_content)
     {
         // If the parsed parameter is to be treated as string instead of file
         if ($this->treat_ini_string) {
             $this->ini_content = $ini_content;
         } else {
             if (!file_exists($ini_content) || !is_readable($ini_content)) {
-                throw new \InvalidArgumentException("The file '{$ini_content}' cannot be opened.");
+                throw new InvalidArgumentException("The file '{$ini_content}' cannot be opened.");
             }
 
             $this->ini_content = $ini_content;
@@ -218,7 +228,7 @@ class Parser
     /**
      * @param array $arr
      *
-     * @return array
+     * @return mixed
      */
     private function parseKeys(array $arr)
     {
@@ -264,7 +274,7 @@ class Parser
                 if ($append && $current !== null) {
                     if (is_array($value)) {
                         if (!is_array($current)) {
-                            throw new \LogicException("Cannot append array to inherited value '{$k}'");
+                            throw new LogicException("Cannot append array to inherited value '{$k}'");
                         }
                         $value = array_merge($current, $value);
                         $value = array_map([$this, 'parseParametricValue'], $value);
@@ -289,7 +299,6 @@ class Parser
      */
     protected function parseParametricValue($value)
     {
-
         // If parametric parsing isn't turned on or value has no parameters
         if (!$this->parametric_parsing || !is_string($value) || strpos($value, '=') === false) {
             return $value;
@@ -315,7 +324,7 @@ class Parser
      *
      * @return mixed
      */
-    protected function parseValue($value)
+    protected function parseValue(string $value)
     {
         switch ($this->array_literals_behavior) {
             case self::PARSE_JSON:
@@ -343,10 +352,15 @@ class Parser
         return $value;
     }
 
-    protected function getArrayValue($array = [])
+    /**
+     * @param array $array
+     *
+     * @return array|\ArrayObject
+     */
+    protected function getArrayValue(array $array = [])
     {
         if ($this->use_array_object) {
-            return new \ArrayObject($array, \ArrayObject::ARRAY_AS_PROPS);
+            return new ArrayObject($array, ArrayObject::ARRAY_AS_PROPS);
         } else {
             return $array;
         }

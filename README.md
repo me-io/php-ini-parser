@@ -38,7 +38,7 @@ Then inside your terminal run the following command to install the dependencies:
 composer install
 ```
 
-## An Example
+## Example
 
 Standard INI files look like this:
 

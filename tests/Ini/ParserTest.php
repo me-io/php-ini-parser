@@ -52,6 +52,27 @@ class ParserTest extends TestCase
         $this->assertSame($expected, $config);
     }
 
+    public function testProcessCanParsesAStringWithINIContents()
+    {
+        $iniString = '[production]
+        
+        hello = world
+        super.funny = config';
+
+        $parser = new Parser();
+        $configObj = $parser->process($iniString);
+        $config = $this->phpUnitDoesNotUnderstandArrayObject($configObj);
+
+        $expected = [
+            'production' => [
+                'hello' => 'world',
+                'super' => ['funny' => 'config'],
+            ],
+        ];
+
+        $this->assertSame($expected, $config);
+    }
+
     /**
      * Confirm that the 'dev' environment inherits all values from the 'prod' environment.
      *
