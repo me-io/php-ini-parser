@@ -146,7 +146,7 @@ class Parser
      *
      * @return array
      */
-    public function process(string $src): array
+    public function process(string $src)
     {
         $simple_parsed = parse_ini_string($src, true, $this->ini_parse_option);
         $inheritance_parsed = $this->parseSections($simple_parsed);
@@ -183,7 +183,7 @@ class Parser
      *
      * @return array  Parsed sections
      */
-    private function parseSections(array $simple_parsed): array
+    private function parseSections(array $simple_parsed)
     {
         // do an initial pass to gather section names
         $sections = [];
