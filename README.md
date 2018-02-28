@@ -12,6 +12,7 @@
 [![Scrutinizer][scrutinizer-badge]][scrutinizer]
 [![downloads][downloads-badge]][downloads]
 [![MIT License][license-badge]][license]
+[![Donate][donate-badge]][donate]
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs]
@@ -310,3 +311,5 @@ The code is available under the [MIT license](LICENSE.md).
 [codecov]: https://codecov.io/gh/me-io/php-ini-parser
 [scrutinizer-badge]: https://scrutinizer-ci.com/g/me-io/php-ini-parser/badges/quality-score.png?b=master
 [scrutinizer]: https://scrutinizer-ci.com/g/me-io/php-ini-parser/?branch=master
+[donate-badge]: https://img.shields.io/badge/paypal-donate-179BD7.svg?style=flat-squares 
+[donate]: https://www.paypal.me/meabed
