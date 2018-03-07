@@ -52,6 +52,16 @@ class ParserTest extends TestCase
         $this->assertSame($expected, $config);
     }
 
+    /**
+     * @expectedException        \LogicException
+     * @expectedExceptionMessage Need ini content to parse.
+     */
+    public function testParseShouldReturnLogicException()
+    {
+        $parser = new Parser();
+        $parser->parse(null);
+    }
+
     public function testProcessCanParsesAStringWithINIContents()
     {
         $iniString = '[production]
